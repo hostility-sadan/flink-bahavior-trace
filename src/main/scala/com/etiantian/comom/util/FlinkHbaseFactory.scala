@@ -3,7 +3,7 @@ package com.etiantian.comom.util
 import java.util.HashMap
 
 import org.apache.hadoop.hbase.client._
-import org.apache.hadoop.hbase.{HBaseConfiguration, TableName}
+import org.apache.hadoop.hbase.{HBaseConfiguration, HColumnDescriptor, HTableDescriptor, TableName}
 
 import scala.collection.JavaConversions._
 
@@ -24,11 +24,25 @@ object FlinkHbaseFactory {
     conn
   }
   def getTable(tablename: String) = {
+    if(!getConn().getAdmin.tableExists(TableName.valueOf(tablename))) {
+      conn.getAdmin.createTable(
+        new HTableDescriptor(
+          TableName.valueOf(tablename)
+        ).addFamily(
+          new HColumnDescriptor("info")
+        ))
+    }
     tables.getOrElse(tablename, {
       initConn
       conn.getTable(TableName.valueOf(tablename))
     })
   }
+
+//  def createTable(tableName:String,family: String)={
+//
+//    getTable(tableName)
+//  }
+
   def put(tableName: String, p: Put) {
     getTable(tableName)
       .put(p)
