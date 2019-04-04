@@ -70,9 +70,11 @@ class HbaseData {
         val get = new Get((user_id +","+ ques_id +","+ c_time).getBytes)
         val answerGet = FlinkHbaseFactory.get("tp_ques_answer",get,"info","ans")
         if (answerGet != null){
-          val ansNew = answer + "|" + answerGet
-          put.addColumn("info".getBytes,"ans".getBytes,ansNew.getBytes)
-          FlinkHbaseFactory.put("tp_ques_answer",put)
+          if (!answerGet.contains(answer)){
+            val ansNew = answer + "|" + answerGet
+            put.addColumn("info".getBytes,"ans".getBytes,ansNew.getBytes)
+            FlinkHbaseFactory.put("tp_ques_answer",put)
+          }
         }else{
           put.addColumn("info".getBytes,"ans".getBytes,answer.getBytes)
           FlinkHbaseFactory.put("tp_ques_answer",put)
