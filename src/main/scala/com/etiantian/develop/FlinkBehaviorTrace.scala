@@ -3,8 +3,7 @@ package com.etiantian.develop
 import java.net.{InetAddress, InetSocketAddress}
 import java.util
 import java.util.Properties
-
-import com.etiantian.bigdata.JsonDeserializationSchema
+import com.etiantian.common.entry.JsonDeserializationSchema
 import com.etiantian.comom.util._
 import org.apache.flink.api.common.functions.RuntimeContext
 import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
@@ -68,8 +67,8 @@ object FlinkBehaviorTrace {
     //        stream.map(x => println(x))
 
     stream.addSink(new ElasticsearchSink[String](ESConfig,addressList,new ElasticsearchSinkFunction[String] {
-      val time1 = System.currentTimeMillis()
       override def process(data: String, runtimeContext: RuntimeContext, requestIndexer: RequestIndexer): Unit = {
+        val time1 = System.currentTimeMillis()
         try {
           val array = data.toString.split("&")
           val content = JsonXContent.contentBuilder().startObject()
@@ -112,9 +111,10 @@ object FlinkBehaviorTrace {
           case e:Exception => e.printStackTrace()
             println("====================== ('存储es数据错误')======================")
         }
+        val time2 = System.currentTimeMillis()
+        println("==存储至es的时间============"+(time2-time1)+"======================")
       }
-      val time2 = System.currentTimeMillis()
-      println("==存储至es的时间============"+(time2-time1)+"======================")
+
     }))
 
 

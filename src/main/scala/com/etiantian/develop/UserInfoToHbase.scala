@@ -3,7 +3,7 @@ package com.etiantian.develop
 import java.util
 import java.util.Properties
 
-import com.etiantian.bigdata.JsonDeserializationSchema
+import com.etiantian.common.entry.JsonDeserializationSchema
 import com.etiantian.comom.util.FlinkHbaseFactory
 import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer010

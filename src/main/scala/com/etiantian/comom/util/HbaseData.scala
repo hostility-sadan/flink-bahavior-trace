@@ -5,7 +5,7 @@ import org.apache.hadoop.hbase.client.{Get, Put}
 import org.apache.flink.api.scala._
 
 class HbaseData {
-  //(user_id,ques_id,answer,c_time,task_id,is_right,task_type)
+  //(user_id,ques_id,answer,c_time,task_id,is_right,task_type,topic)
   def readData(dataStream: DataStream[(String,String,String,String,String,String,String,String)])= {
     dataStream.map(x => {
       val time1 = System.currentTimeMillis()
@@ -40,7 +40,7 @@ class HbaseData {
       var type_id = ""
       val object_type = 2
       val is_axp = 0
-      if (jid != "" && jid != "null" && subject != null) {
+      if (jid != "" && jid != null && subject != null) {
         val newId = new Get((jid + "," + subject).getBytes)
         type_id = FlinkHbaseFactory.get("jid_sub_ver_info", newId, "tol", "ver")
 //        println("ques_id,type_id: " + ques_id + "," + type_id)

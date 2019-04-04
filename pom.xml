@@ -13,11 +13,11 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>com.etiantian.bigdata</groupId>
-            <artifactId>flink-kafka</artifactId>
-            <version>1.0</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.etiantian.bigdata</groupId>-->
+            <!--<artifactId>flink-kafka</artifactId>-->
+            <!--<version>1.0</version>-->
+        <!--</dependency>-->
 
         <dependency>
             <groupId>org.json</groupId>
