@@ -67,7 +67,7 @@ object UserInfoToHbase {
 //    })
 
     val write = new WriteToHbase()
-    env.addSource(Consumer010).map(write.writeToHbase(_,COMMON_TOPIC,"user_id,ref,ett_user_id","user_id|ref"))
+    env.addSource(Consumer010).map(write.writeToHbase(_,COMMON_TOPIC,"user_id,ref,ett_user_id","user_id|ref|user_id,ref"))
     env.execute()
   }
 }

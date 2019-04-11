@@ -24,9 +24,10 @@ object FlinkBehaviorTrace {
     ESConfig.put("cluster.name",CLUSTER_NAME)
     ESConfig.put("bulk.flush.max.actions",MAX_ACTION)
 
-    val addressList = List(
-      new InetSocketAddress(InetAddress.getByName(ES_NAME),ES_PORT)
-    )
+//    val addressList = List(
+//      new InetSocketAddress(InetAddress.getByName(ES_NAME),ES_PORT)
+//    )
+    val addressList = ES_NAME.split(",").map(host => new InetSocketAddress(InetAddress.getByName(host),ES_PORT)).toList
 
     val pro = new Properties();
     pro.put("bootstrap.servers", BROKER);
@@ -54,7 +55,7 @@ object FlinkBehaviorTrace {
       .filter(kafkaMessage.filterType(_))
       .map(kafkaMessage.kafkaMessage(_))
 
-//        dataStream.map(x => println(x))
+        dataStream.map(x => println(x))
 
     val hbaseReaderData = new HbaseData
     val a = hbaseReaderData.writeData(dataStream)

@@ -32,23 +32,29 @@ class WriteToHbase extends Serializable{
     try {
       val after = value.getJSONObject("after")
       if (topic == topicName) {
+        println(topic)
+        val dataBase = topic.split("\\.")
+        var table = ""
+        if (dataBase(0) == DATABASE){
+          table = dataBase(2)+ "_mysql"
+        }else{
+          table = dataBase(2)+ "_oracle"
+        }
+        println(table)
         val props = columns.split(",").toList
         val keyList = keys.split("\\|").toList
         var alias = ""
-        keyList.map(key => {
-          if (key.length >= 3) {
-            alias = key.substring(0, 3)
-          } else {
-            alias = key
-          }
+        for(key <- keyList){
+          val ke = key.split(",")
+          alias = ke.mkString("_")
           val put = new Put(alias.getBytes)
           props.map(prop => {
             if (after.has(prop) && prop != key) {
-              put.addColumn("info".getBytes, prop.substring(0, 3).getBytes, after.get(prop).toString.getBytes)
+              put.addColumn("info".getBytes, prop.getBytes, after.get(prop).toString.getBytes)
             }
           })
-          FlinkHbaseFactory.put(topic + "_" + alias, put)
-        })
+//          FlinkHbaseFactory.put(table + "_" + alias, put)
+        }
       }
     }catch {
       case e:Exception => e.printStackTrace()
