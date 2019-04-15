@@ -27,7 +27,7 @@ object UserInfoToHbase {
     topics.foreach(list.add(_))
     val Consumer010 = new FlinkKafkaConsumer010[String](
       list,topicMsgSchame,pro
-    ).setStartFromEarliest().setCommitOffsetsOnCheckpoints(false)
+    ).setStartFromLatest().setCommitOffsetsOnCheckpoints(false)
 //    env.addSource(Consumer010).map(message => {
 //      val value = new JSONObject(new JSONObject(message).get("value").toString.toLowerCase)
 //      println(value)
@@ -67,7 +67,7 @@ object UserInfoToHbase {
 //    })
 
     val write = new WriteToHbase()
-    env.addSource(Consumer010).map(write.writeToHbase(_,COMMON_TOPIC,"user_id,ref,ett_user_id","user_id|ref|user_id,ref"))
+    env.addSource(Consumer010).filter(write.filterJson(_)).map(write.writeToHbase(_,COMMON_TOPIC,TABLE_COLUMN,TABLE_KEY))
     env.execute()
   }
 }

@@ -42,7 +42,7 @@ object FlinkBehaviorTrace {
     topics.foreach(list.add(_))
     val Consumer010 = new FlinkKafkaConsumer010[String](
       list,topicMsgSchame,pro
-    ).setStartFromEarliest().setCommitOffsetsOnCheckpoints(false)
+    ).setStartFromLatest().setCommitOffsetsOnCheckpoints(false)
 //    logger.warn("==kafka传输时间============"+(time2-time1)+"======================")
 
     val kafkaStream = env.addSource(Consumer010)
@@ -58,7 +58,7 @@ object FlinkBehaviorTrace {
         dataStream.map(x => println(x))
 
     val hbaseReaderData = new HbaseData
-    val a = hbaseReaderData.writeData(dataStream)
+    hbaseReaderData.writeData(dataStream)
 //    a.map(x => println(x))
 
     val stream = hbaseReaderData.readData(dataStream)

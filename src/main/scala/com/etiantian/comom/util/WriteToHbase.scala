@@ -12,6 +12,7 @@ class WriteToHbase extends Serializable{
       //      println("value===="+x.get("value").toString)
       val value = new JSONObject(x.get("value").toString.toLowerCase)
       value.getJSONObject("after")
+      value.getJSONObject("before")
       //      println("value===="+x.get("value").toString)
       true
     } catch {
@@ -32,7 +33,6 @@ class WriteToHbase extends Serializable{
     try {
       val after = value.getJSONObject("after")
       if (topic == topicName) {
-        println(topic)
         val dataBase = topic.split("\\.")
         var table = ""
         if (dataBase(0) == DATABASE){
@@ -40,20 +40,25 @@ class WriteToHbase extends Serializable{
         }else{
           table = dataBase(2)+ "_oracle"
         }
-        println(table)
         val props = columns.split(",").toList
         val keyList = keys.split("\\|").toList
         var alias = ""
         for(key <- keyList){
           val ke = key.split(",")
           alias = ke.mkString("_")
-          val put = new Put(alias.getBytes)
+          var rowkey = ""
+          for(i <- 0 to ke.length - 1){
+            rowkey += after.get(ke(i)).toString +","
+          }
+//          println(rowkey)
+//          println(rowkey.substring(0,rowkey.lastIndexOf(",")))
+          val put = new Put(rowkey.substring(0,rowkey.lastIndexOf(",")).getBytes)
           props.map(prop => {
-            if (after.has(prop) && prop != key) {
-              put.addColumn("info".getBytes, prop.getBytes, after.get(prop).toString.getBytes)
-            }
-          })
-//          FlinkHbaseFactory.put(table + "_" + alias, put)
+              if (after.has(prop) && !ke.contains(prop)) {
+                put.addColumn("info".getBytes, prop.getBytes, after.get(prop).toString.getBytes)
+              }
+            })
+          FlinkHbaseFactory.put(table + "_" + alias, put)
         }
       }
     }catch {

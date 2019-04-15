@@ -25,12 +25,12 @@ class HbaseData {
       var jid = ""
       val userId = new Get(user_id.getBytes)
       if (topic == STU_TOPIC){
-        jid = FlinkHbaseFactory.get("user_info_id", userId, "tol", "jid")
+        jid = FlinkHbaseFactory.get("user_info_mysql_user_id", userId, "info", "ett_user_id")
       }
       if (topic == ANS_TOPIC){
-        jid = FlinkHbaseFactory.get("user_info_ref", userId, "tol", "jid")
+        jid = FlinkHbaseFactory.get("user_info_mysql_ref", userId, "info", "ett_user_id")
       }
-      if (topic == BR_TOPIC){
+      if (topic == BR_TOPIC || topic == TOLJ_TOPIC){
         jid = user_id
       }
       val quesId = new Get(ques_id.getBytes)
