@@ -11,13 +11,16 @@ import org.apache.hadoop.hbase.client.Put
 import org.apache.flink.api.scala._
 import org.json.JSONObject
 
+/**
+  * 实时将kafka的数据存储至hbase
+  * 可以使得刚注册的用户，使得后期做题的行为轨迹可以实时的显示
+  */
 object UserInfoToHbase {
 
   def main(args: Array[String]): Unit = {
     val pro = new Properties();
     pro.put("bootstrap.servers", BROKER);
     pro.put("group.id", GROUP_ID);
-    pro.put("zookeeper.connect", KAFKA_ZOOKEEPER);
     val env = StreamExecutionEnvironment.getExecutionEnvironment
     env.enableCheckpointing(500)
 

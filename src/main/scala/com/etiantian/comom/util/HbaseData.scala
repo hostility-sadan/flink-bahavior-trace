@@ -4,7 +4,7 @@ import org.apache.flink.streaming.api.scala.DataStream
 import org.apache.hadoop.hbase.client.{Get, Put}
 import org.apache.flink.api.scala._
 
-class HbaseData {
+class HbaseData extends Serializable{
   //(user_id,ques_id,answer,c_time,task_id,is_right,task_type,topic)
   def readData(dataStream: DataStream[(String,String,String,String,String,String,String,String)])= {
     dataStream.map(x => {
@@ -52,10 +52,15 @@ class HbaseData {
       }
       val time2 = System.currentTimeMillis()
       println("读取hbase的时间============"+(time2-time1)+"======================")
-      jid + "," + ques_id + "," + c_time + "&" + jid + "&" + ques_id + "&" + answer + "&" + c_time + "&" + task_id + "&" + is_right + "&" + subject + "&" + point_ids + "&" + list + "&" + object_type + "&" + is_axp
+
+//        jid + "," + ques_id + "," + c_time + "&" + jid + "&" + ques_id + "&" + answer + "&" + c_time + "&" + task_id + "&" + is_right + "&" + subject + "&" + point_ids + "&" + list + "&" + object_type + "&" + is_axp
+
+      ((jid + "," + ques_id + "," + c_time),jid,ques_id,answer,c_time,task_id,is_right,subject,point_ids,list,object_type,is_axp)
+
     })
   }
 
+  //处理同一用户同一时间有多个答案
   def writeData(dataStream: DataStream[(String,String,String,String,String,String,String,String)])={
     dataStream.map(x => {
       val user_id = x._1
@@ -82,8 +87,27 @@ class HbaseData {
         val time2 = System.currentTimeMillis()
         println("==数据写入hbase的时间============"+(time2-time1)+"======================")
       }
-
-
     })
   }
+
+  def errorToHBase(message: String)={
+    val rowkey = System.currentTimeMillis()
+    val put = new Put(rowkey.toString.getBytes)
+    put.addColumn("info".getBytes,"tol".getBytes,message.getBytes)
+    FlinkHbaseFactory.put("flink_behavior_trace_error",put)
+  }
+  def errorToHBase(message: (String,String,String,String,String,String,String,String))={
+    val rowkey = System.currentTimeMillis()
+    val put = new Put(rowkey.toString.getBytes)
+    put.addColumn("info".getBytes,"tol".getBytes,message.toString().getBytes)
+    FlinkHbaseFactory.put("flink_behavior_trace_error",put)
+  }
+
+  def errorToHBase(message: (String, String, String, String, String, String, String, String, String, String, Int, Int))={
+    val rowkey = System.currentTimeMillis()
+    val put = new Put(rowkey.toString.getBytes)
+    put.addColumn("info".getBytes,"tol".getBytes,message.toString().getBytes)
+    FlinkHbaseFactory.put("flink_behavior_trace_error",put)
+  }
+
 }
