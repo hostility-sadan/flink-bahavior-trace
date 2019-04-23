@@ -39,7 +39,7 @@ object FlinkBehaviorTrace {
     topics.foreach(list.add(_))
     val Consumer010 = new FlinkKafkaConsumer010[String](
       list, topicMsgSchame, pro
-    ).setStartFromLatest().setCommitOffsetsOnCheckpoints(false)
+    ).setStartFromGroupOffsets().setCommitOffsetsOnCheckpoints(false)
     //    logger.warn("==kafka传输时间============"+(time2-time1)+"======================")
 
     val kafkaMessage = new TopicMessage()

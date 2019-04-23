@@ -30,7 +30,7 @@ object UserInfoToHbase {
     topics.foreach(list.add(_))
     val Consumer010 = new FlinkKafkaConsumer010[String](
       list,topicMsgSchame,pro
-    ).setStartFromLatest().setCommitOffsetsOnCheckpoints(false)
+    ).setStartFromGroupOffsets().setCommitOffsetsOnCheckpoints(false)
 //    env.addSource(Consumer010).map(message => {
 //      val value = new JSONObject(new JSONObject(message).get("value").toString.toLowerCase)
 //      println(value)
