@@ -92,10 +92,10 @@ object FlinkBehaviorTrace {
 
 
     //将有after的数据存储至ES
-    stream.addSink(new ElasticsearchSink[(String, String, String, String, String, String, String, String, String, String, Int, Int)](ESConfig, addressList, new FlinkAddES))
+    stream.addSink(new ElasticsearchSink[(String, String, String, String, String, String, String, String, String, String, Int, Int,String)](ESConfig, addressList, new FlinkAddES))
 
     //只有before的数据，将ES中有的数据进行删除
-    deleteStream.addSink(new ElasticsearchSink[(String, String, String, String, String, String, String, String, String, String, Int, Int)](ESConfig, addressList, new FlinkDeleteEs))
+    deleteStream.addSink(new ElasticsearchSink[(String, String, String, String, String, String, String, String, String, String, Int, Int,String)](ESConfig, addressList, new FlinkDeleteEs))
 
 
     env.execute()

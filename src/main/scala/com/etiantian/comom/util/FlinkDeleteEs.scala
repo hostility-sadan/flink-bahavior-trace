@@ -5,8 +5,8 @@ import org.apache.flink.streaming.connectors.elasticsearch.{ElasticsearchSinkFun
 import org.elasticsearch.action.delete.DeleteRequest
 import org.elasticsearch.action.get.GetRequest
 
-class FlinkDeleteEs extends ElasticsearchSinkFunction[(String, String, String, String, String, String, String, String, String, String, Int, Int)]{
-  override def process(data: (String, String, String, String, String, String, String, String, String, String, Int, Int), runtimeContext: RuntimeContext, requestIndexer: RequestIndexer): Unit = {
+class FlinkDeleteEs extends ElasticsearchSinkFunction[(String, String, String, String, String, String, String, String, String, String, Int, Int,String)]{
+  override def process(data: (String, String, String, String, String, String, String, String, String, String, Int, Int,String), runtimeContext: RuntimeContext, requestIndexer: RequestIndexer): Unit = {
     val time1 = System.currentTimeMillis()
     try {
       val writeData = (new WriteEsData).addEs(data)

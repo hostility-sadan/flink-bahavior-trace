@@ -5,7 +5,7 @@ import org.elasticsearch.common.xcontent.json.JsonXContent
 
 class WriteEsData {
 
-  def addEs(data: (String, String, String, String, String, String, String, String, String, String, Int, Int)): (String, XContentBuilder) = {
+  def addEs(data: (String, String, String, String, String, String, String, String, String, String, Int, Int,String)): (String, XContentBuilder) = {
     val content = JsonXContent.contentBuilder().startObject()
       .field("id", data._1)
       .field("jid", data._2.toLong)
@@ -26,6 +26,9 @@ class WriteEsData {
     }
     if (data._10 != "" && data._10 != "null" && data._10 != null){
       content.field("list", data._10)
+    }
+    if (data._11 != "" && data._11 != null && data._11 != "null"){
+      content.field("dc_school_id", data._11.toLong)
     }
 
     content.endObject()
